@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 from app import db
 from app.models import User, Post
-from app.tools import auth_required
+from app.tools import auth_required, json_response
 
 import datetime
 
