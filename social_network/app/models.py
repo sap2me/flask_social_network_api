@@ -22,9 +22,9 @@ class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	text = db.Column(db.String(500))
 	creation_time = db.Column(db.DateTime)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	likes_amount = db.Column(db.Integer, nullable=True)
-	likes = db.relationship('User', nullable=True, secondary=likes)
+	likes = db.relationship('User', secondary=likes)
 
 	def __repr__(self):
 		return f"<Post {self.id}>"
