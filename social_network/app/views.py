@@ -1,5 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
 
 import datetime
 
@@ -33,6 +34,21 @@ def singup():
 
 	return jsonify({'message': 'User created'})
 
-@auth.route('/login')
+@auth.route('/login', methods=['POST'])
 def login():
-	return ''
+	data = request.get_json()
+	name = data.get('name')
+	hashed_password= data.get('password')
+
+	if not name or not hashed_password:
+		return jsonify({'error': 'Name or password is incorrenct'}), 401
+
+	user = User.query.filter_by(name=name).first()
+	if not user or not check_password_hash(user.password, hashed_password):
+		return jsonify({'error': 'Name or password is incorrenct'}), 401
+
+	exp_time = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+	auth_token = jwt.encode({'name': name, 'exp': exp_time}, current_app.config['SECRET_KEY'])
+
+	return jsonify({'jwt': auth_token.decode('utf-8')})
+
