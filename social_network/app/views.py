@@ -45,11 +45,11 @@ def login():
 	hashed_password= data.get('password')
 
 	if not name or not hashed_password:
-		return jsonify({'error': 'Name or password is incorrenct'}), 401
+		return jsonify({'error': 'Name or password is incorrect'}), 401
 
 	user = User.query.filter_by(name=name).first()
 	if not user or not check_password_hash(user.password, hashed_password):
-		return jsonify({'error': 'Name or password is incorrenct'}), 401
+		return jsonify({'error': 'Name or password is incorrect'}), 401
 
 	exp_time = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 	auth_token = jwt.encode({'name': name, 'exp': exp_time}, current_app.config['SECRET_KEY'])

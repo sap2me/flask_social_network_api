@@ -14,7 +14,7 @@ class User(db.Model):
 	last_login = db.Column(db.DateTime, nullable=True)
 	last_activity = db.Column(db.DateTime)
 	posts = db.relationship('Post', backref='author')
-	post_likes = db.relationship('Post', secondary=likes, backref='user')
+	post_likes = db.relationship('Post', secondary=likes, backref='likes_users')
 
 	def __repr__(self):
 		return f"<User {self.name}>"
@@ -26,7 +26,7 @@ class Post(db.Model):
 	creation_time = db.Column(db.DateTime)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	likes_amount = db.Column(db.Integer, nullable=True)
-	user_likes = db.relationship('User', secondary=likes, backref='post')
+	user_likes = db.relationship('User', secondary=likes, backref='posts_users')
 
 	def __repr__(self):
 		return f"<Post {self.id}>"

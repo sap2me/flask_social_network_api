@@ -15,12 +15,11 @@ def main():
 @api.route('/post', methods=['POST'])
 @auth_required
 def create_post(user):
+	""" Create new post """
 	data = request.get_json()
-	if not data:
-		return jsonify({'error': 'No post data'})
 	text = data.get('text')
 	if not text:
-		return jsonify({'error': 'Text required'})
+		return jsonify({'error': 'text is missing'})
 	creation_time = datetime.datetime.utcnow()
 	new_post = Post(text=text, creation_time=creation_time, likes_amount=0, author=user)
 
@@ -28,3 +27,21 @@ def create_post(user):
 	db.session.commit()
 
 	return jsonify({'message': "Post created"})
+
+@api.route('/post/like', methods=['POST'])
+@auth_required
+def like_post(user):
+	""" Like post """
+	data = request.get_json()
+	post_id = data.get('post_id')
+	if not post_id:
+		return jsonify({'error': "post_id is missing"})
+	post = Post.query.filter_by(id=int(post_id)).first()
+	if not post:
+		return jsonify({'error': "post_id is incorrect"})
+	if user in post.user_likes:
+		return jsonify({'error': "Post is already liked"})
+	post.user_likes.append(user)
+	db.session.commit()
+	
+	return jsonify({'message': "Post liked"})
