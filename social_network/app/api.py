@@ -42,6 +42,26 @@ def like_post(user):
 	if user in post.user_likes:
 		return jsonify({'error': "Post is already liked"})
 	post.user_likes.append(user)
+	post.likes_amount += 1
 	db.session.commit()
 	
 	return jsonify({'message': "Post liked"})
+
+@api.route('/post/unlike', methods=['POST'])
+@auth_required
+def unlike_post(user):
+	""" Unlike post """
+	data = request.get_json()
+	post_id = data.get('post_id')
+	if not post_id:
+		return jsonify({'error': "post_id is missing"})
+	post = Post.query.filter_by(id=int(post_id)).first()
+	if not post:
+		return jsonify({'error': "post_id is incorrect"})
+	if user not in post.user_likes:
+		return jsonify({'error': "Post is not liked"})
+	post.user_likes.remove(user)
+	post.likes_amount -= 1
+	db.session.commit()
+	
+	return jsonify({'message': "Post unliked"})

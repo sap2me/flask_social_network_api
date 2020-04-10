@@ -1,9 +1,11 @@
 from flask import request, jsonify, current_app
 
 from functools import wraps
+import datetime
 
 import jwt
 
+from app import db
 from app.models import User
 
 def auth_required(func):
@@ -22,5 +24,7 @@ def auth_required(func):
 				return jsonify({'error': 'There is no this user in database'}), 500
 		except:
 			return jsonify({'error': 'Token is invalid'}), 401
+		user.last_activity = datetime.datetime.utcnow()
+		db.session.commit()
 		return func(user, *args, **kwargs)
 	return wrapper
