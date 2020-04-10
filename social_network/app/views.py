@@ -6,7 +6,7 @@ import datetime
 
 from app import db
 from app.models import User, Post
-from tools import json_response
+from app.tools import json_response
 
 auth = Blueprint('auth', __name__)
 

@@ -19,14 +19,14 @@ def create_post(user):
 	data = request.get_json()
 	text = data.get('text')
 	if not text:
-		return jsonify({'error': 'text is missing'})
+		return json_response('Data required', 400)
 	creation_time = datetime.datetime.utcnow()
 	new_post = Post(text=text, creation_time=creation_time, likes_amount=0, author=user)
 
 	db.session.add(new_post)
 	db.session.commit()
 
-	return jsonify({'message': "Post created"})
+	return json_response("Post created")
 
 @api.route('/post/like', methods=['POST'])
 @auth_required
@@ -35,17 +35,17 @@ def like_post(user):
 	data = request.get_json()
 	post_id = data.get('post_id')
 	if not post_id:
-		return jsonify({'error': "post_id is missing"})
+		return json_response("post_id is missing", 400)
 	post = Post.query.filter_by(id=int(post_id)).first()
 	if not post:
-		return jsonify({'error': "post_id is incorrect"})
+		return json_response("post_id is incorrect", 400)
 	if user in post.user_likes:
-		return jsonify({'error': "Post is already liked"})
+		return json_response("Post is already liked", 400)
 	post.user_likes.append(user)
 	post.likes_amount += 1
 	db.session.commit()
 	
-	return jsonify({'message': "Post liked"})
+	return json_response("Post liked")
 
 @api.route('/post/unlike', methods=['POST'])
 @auth_required
@@ -54,14 +54,14 @@ def unlike_post(user):
 	data = request.get_json()
 	post_id = data.get('post_id')
 	if not post_id:
-		return jsonify({'error': "post_id is missing"})
+		return json_response("post_id is missing", 400)
 	post = Post.query.filter_by(id=int(post_id)).first()
 	if not post:
-		return jsonify({'error': "post_id is incorrect"})
+		return json_response("post_id is incorrect", 400)
 	if user not in post.user_likes:
-		return jsonify({'error': "Post is not liked"})
+		return json_response("Post is not liked", 400)
 	post.user_likes.remove(user)
 	post.likes_amount -= 1
 	db.session.commit()
 	
-	return jsonify({'message': "Post unliked"})
+	return json_response("Post unliked")
