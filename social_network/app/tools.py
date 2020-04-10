@@ -28,3 +28,10 @@ def auth_required(func):
 		db.session.commit()
 		return func(user, *args, **kwargs)
 	return wrapper
+
+def json_response(message, http_code=200):
+	if http_code >= 400:
+		success = False
+	else:
+		success = True
+	return jsonify({'message': message, 'success': success}), http_code
