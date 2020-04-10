@@ -1,10 +1,13 @@
 from flask import request, jsonify, current_app
 
+from functools import wraps
+
 import jwt
 
 from app.models import User
 
 def auth_required(func):
+	@wraps(func)
 	def wrapper(*args, **kwargs):
 		data = request.get_json()
 		if not data:
