@@ -12,6 +12,8 @@ auth = Blueprint('auth', __name__)
 @auth.route('/singup', methods=['POST'])
 def singup():
 	data = request.get_json()
+	if not data:
+		return jsonify({'error': 'No post data'})
 	name = data.get('name')
 	password = data.get('password')
 
@@ -37,6 +39,8 @@ def singup():
 @auth.route('/login', methods=['POST'])
 def login():
 	data = request.get_json()
+	if not data:
+		return jsonify({'error': 'No post data'})
 	name = data.get('name')
 	hashed_password= data.get('password')
 
@@ -51,4 +55,3 @@ def login():
 	auth_token = jwt.encode({'name': name, 'exp': exp_time}, current_app.config['SECRET_KEY'])
 
 	return jsonify({'jwt': auth_token.decode('utf-8')})
-
