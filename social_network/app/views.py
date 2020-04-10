@@ -53,5 +53,8 @@ def login():
 
 	exp_time = datetime.datetime.utcnow() + datetime.timedelta(days=7)
 	auth_token = jwt.encode({'name': name, 'exp': exp_time}, current_app.config['SECRET_KEY'])
+	user.last_login = datetime.datetime.utcnow()
+
+	db.session.commit()
 
 	return jsonify({'jwt': auth_token.decode('utf-8')})
