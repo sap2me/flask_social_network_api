@@ -9,9 +9,6 @@ import datetime
 
 api = Blueprint('api', __name__)
 
-@api.route('/')
-def main():
-	return '<h1>Api</h1>'
 
 @api.route('/post', methods=['POST'])
 @auth_required
