@@ -22,7 +22,7 @@ class User(db.Model):
 class Post(db.Model):
 	__tablename__ = 'posts'
 	id = db.Column(db.Integer, primary_key=True)
-	text = db.Column(db.String(500))
+	text = db.Column(db.String(2000))
 	creation_time = db.Column(db.DateTime)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	likes_amount = db.Column(db.Integer, nullable=True)
