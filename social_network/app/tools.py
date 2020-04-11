@@ -11,7 +11,7 @@ from app.models import User
 def auth_required(func):
 	@wraps(func)
 	def wrapper(*args, **kwargs):
-		data = request.get_json()
+		data = request.form
 		if not data:
 			return json_response('No post data', 400)
 		token = data.get('jwt')

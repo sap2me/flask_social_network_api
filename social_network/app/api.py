@@ -14,7 +14,7 @@ api = Blueprint('api', __name__)
 @auth_required
 def create_post(user):
 	""" Create new post """
-	data = request.get_json()
+	data = request.form
 	text = data.get('text')
 	if not text:
 		return json_response('Data required', 400)
@@ -30,7 +30,7 @@ def create_post(user):
 @auth_required
 def like_post(user):
 	""" Like post """
-	data = request.get_json()
+	data = request.form
 	post_id = data.get('post_id')
 	if not post_id:
 		return json_response("post_id is missing", 400)
@@ -49,7 +49,7 @@ def like_post(user):
 @auth_required
 def unlike_post(user):
 	""" Unlike post """
-	data = request.get_json()
+	data = request.form
 	post_id = data.get('post_id')
 	if not post_id:
 		return json_response("post_id is missing", 400)

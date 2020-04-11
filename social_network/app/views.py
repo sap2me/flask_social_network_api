@@ -12,7 +12,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/singup', methods=['POST'])
 def singup():
-	data = request.get_json()
+	data = request.form
 	if not data:
 		return json_response('Data required', 400)
 	name = data.get('name')
@@ -39,7 +39,7 @@ def singup():
 
 @auth.route('/login', methods=['POST'])
 def login():
-	data = request.get_json()
+	data = request.form
 	if not data:
 		return json_response('Data required', 400)
 	name = data.get('name')
